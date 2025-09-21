@@ -11,4 +11,4 @@ services:
     environment:
       - SECRET_KEY=test 
       - DEBUG=True
-      - ALLOWED_HOSTS=192.168.73.190
+      - ALLOWED_HOSTS=127.0.0.1
