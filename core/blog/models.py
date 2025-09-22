@@ -1,7 +1,10 @@
 from django.db import models
 from accounts.models import User
-
+from django.contrib.auth import get_user_model
 # Create your models here.
+
+# getting the user model
+User = get_user_model()
 
 class Post (models.Model):
 
