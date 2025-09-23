@@ -2,9 +2,11 @@ from django.contrib import admin
 from django.urls import path 
 from . import views
 from django.views.generic import TemplateView
+from django.views.generic.base import RedirectView
+
+app_name = 'blog'
 
 urlpatterns = [
-    path('fbv/', views.fbv, name='fbv'),
-    path('cbv/', views.cbv.as_view(), name='cbv'),
-    
+    # path('cbv/', views.cbv.as_view(), name='cbv'),
+    path('list/', views.postListView.as_view(), name='home'),
 ]
