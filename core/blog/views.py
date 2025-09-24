@@ -3,7 +3,8 @@ from django.views.generic.base import TemplateView
 from .models import Post, Category
 from django.views.generic.list import ListView
 from django.views.generic.detail import DetailView
-
+from .forms import PostForm
+from django.views.generic.edit import FormView
 # Create your views here.
 
 
@@ -28,8 +29,16 @@ class postListView(ListView):
     paginate_by = 2
     ordering = ['-created_at']
 
-
+# DetailView
 class postDetailView(DetailView):
     model = Post
     context_object_name = 'contact'
+
+class addPostView(FormView):
+    template_name = 'blog/contact.html'
+    form_class = PostForm
+    success_url = '/blog/list/'
+    def form_valid(self, form):
+        form.save()
+        return super().form_valid(form)
     

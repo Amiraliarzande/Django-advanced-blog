@@ -10,4 +10,5 @@ urlpatterns = [
     # path('cbv/', views.cbv.as_view(), name='cbv'),
     path('list/', views.postListView.as_view(), name='home'),
     path('detail/<int:pk>/', views.postDetailView.as_view(), name='post_detail'),
+    path('add/', views.addPostView.as_view(), name='add_post'),
 ]
