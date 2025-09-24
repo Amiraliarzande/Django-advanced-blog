@@ -1,10 +1,8 @@
 from django.shortcuts import render
 from django.views.generic.base import TemplateView
 from .models import Post, Category
-from django.views.generic.list import ListView
-from django.views.generic.detail import DetailView
+from django.views.generic import ListView, DetailView, FormView, CreateView
 from .forms import PostForm
-from django.views.generic.edit import FormView
 # Create your views here.
 
 
@@ -33,7 +31,8 @@ class postListView(ListView):
 class postDetailView(DetailView):
     model = Post
     context_object_name = 'contact'
-
+'''
+# FormView
 class addPostView(FormView):
     template_name = 'blog/contact.html'
     form_class = PostForm
@@ -41,4 +40,15 @@ class addPostView(FormView):
     def form_valid(self, form):
         form.save()
         return super().form_valid(form)
-    
+'''  
+
+class CreatePostView(CreateView):
+
+    model = Post
+    form_class = PostForm
+    template_name = 'blog/post_create.html'
+    success_url = '/blog/post/list/'
+
+    def form_valid(self, form):
+        form.instance.author = self.request.user
+        return super().form_valid(form)

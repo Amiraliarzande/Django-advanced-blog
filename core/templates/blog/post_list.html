@@ -8,6 +8,7 @@
     <ul>
         {% for article in articles %}
             <li>{{ article.id }}</li>
+            <li>{{ article.author }}</li>
             <a href="{% url 'blog:post_detail' pk=article.id %}"><li>{{ article.title }} - {{ article.published_at }}</li></a>
         {% endfor %}
     </ul>

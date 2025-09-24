@@ -30,6 +30,7 @@ class CustomUserManager(BaseUserManager):
 
 
 class User (AbstractBaseUser, PermissionsMixin):
+    id = models.AutoField(primary_key=True)
     email = models.EmailField(max_length=255,unique=True)
     is_staff = models.BooleanField(default=False)
     is_active = models.BooleanField(default=False)
@@ -47,6 +48,7 @@ class User (AbstractBaseUser, PermissionsMixin):
         return self.email
     
 class Profile(models.Model):
+    id = models.AutoField(primary_key=True)
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     first_name = models.CharField(max_length=250)
     last_name = models.CharField(max_length=250)
