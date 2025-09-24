@@ -2,6 +2,7 @@ from django.shortcuts import render
 from django.views.generic.base import TemplateView
 from .models import Post, Category
 from django.views.generic.list import ListView
+from django.views.generic.detail import DetailView
 
 # Create your views here.
 
@@ -19,6 +20,7 @@ class cbv(TemplateView):
 
 '''
 
+# ListView
 class postListView(ListView):
     model = Post
     template_name = 'post_list.html'
@@ -26,4 +28,8 @@ class postListView(ListView):
     paginate_by = 2
     ordering = ['-created_at']
 
+
+class postDetailView(DetailView):
+    model = Post
+    context_object_name = 'contact'
     

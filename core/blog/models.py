@@ -7,7 +7,7 @@ from django.contrib.auth import get_user_model
 User = get_user_model()
 
 class Post (models.Model):
-
+    id = models.AutoField(primary_key=True)
     image = models.ImageField(null=True, blank=True)
     author = models.ForeignKey(User,on_delete=models.CASCADE)
     category = models.ForeignKey("Category",on_delete=models.SET_NULL, null=True)
