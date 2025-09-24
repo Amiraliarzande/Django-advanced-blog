@@ -20,8 +20,10 @@ class cbv(TemplateView):
 '''
 
 class postListView(ListView):
-    
-    context_object_name = 'posts'
+    model = Post
+    template_name = 'post_list.html'
+    context_object_name = 'articles'
+    paginate_by = 2
+    ordering = ['-created_at']
 
-    def get_queryset(self):
-        return Post.objects.filter(status=True)
+    
