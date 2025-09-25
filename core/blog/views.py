@@ -1,7 +1,7 @@
 from django.shortcuts import render
 from django.views.generic.base import TemplateView
 from .models import Post, Category
-from django.views.generic import ListView, DetailView, FormView, CreateView, UpdateView
+from django.views.generic import ListView, DetailView, FormView, CreateView, UpdateView, DeleteView
 from .forms import PostForm
 # Create your views here.
 
@@ -21,7 +21,7 @@ class cbv(TemplateView):
 
 # Post List View
 class postListView(ListView):
-    
+
     model = Post
     template_name = 'post_list.html'
     context_object_name = 'articles'
@@ -64,3 +64,10 @@ class editPostView(UpdateView):
     form_class = PostForm
     template_name = 'blog/post_create.html'
     success_url = '/blog/post/list/'
+
+class DeletePostView(DeleteView):
+
+    model = Post
+    template_name = 'blog/post_delete.html'
+    success_url = '/blog/post/list/'
+    
