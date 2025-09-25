@@ -8,7 +8,7 @@
     <ul>
         {% for article in articles %}
             <li>{{ article.id }}</li>
-            <li>{{ article.author }}</li>
+            <li>{{ article.author.first_name }} - {{ article.author.last_name }}</li>
             <a href="{% url 'blog:post_detail' pk=article.id %}"><li>{{ article.title }} - {{ article.published_at }}</li></a>
             <a href="{% url 'blog:edit_post' pk=article.id %}">Edit</a>
             <a href="{% url 'blog:delete_post' pk=article.id %}">Delete</a>
