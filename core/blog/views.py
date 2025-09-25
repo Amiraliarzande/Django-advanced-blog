@@ -2,6 +2,7 @@ from django.shortcuts import render
 from django.views.generic.base import TemplateView
 from .models import Post, Category
 from django.views.generic import ListView, DetailView, FormView, CreateView, UpdateView, DeleteView
+from django.contrib.auth.mixins import LoginRequiredMixin
 from .forms import PostForm
 # Create your views here.
 
@@ -20,7 +21,7 @@ class cbv(TemplateView):
 '''
 
 # Post List View
-class postListView(ListView):
+class postListView(LoginRequiredMixin, ListView):
 
     model = Post
     template_name = 'post_list.html'
@@ -29,7 +30,7 @@ class postListView(ListView):
     ordering = ['-created_at']
 
 # Post Detail View
-class postDetailView(DetailView):
+class postDetailView(LoginRequiredMixin, DetailView):
 
     model = Post
     context_object_name = 'contact'
@@ -46,7 +47,7 @@ class addPostView(FormView):
 ''' 
 
 # Create Post View
-class CreatePostView(CreateView):
+class CreatePostView(LoginRequiredMixin, CreateView):
 
     model = Post
     form_class = PostForm
@@ -58,16 +59,16 @@ class CreatePostView(CreateView):
         return super().form_valid(form)
     
 # Edit Post View
-class editPostView(UpdateView):
+class editPostView(LoginRequiredMixin,UpdateView):
 
     model = Post
     form_class = PostForm
     template_name = 'blog/post_create.html'
     success_url = '/blog/post/list/'
 
-class DeletePostView(DeleteView):
+class DeletePostView(LoginRequiredMixin,DeleteView):
 
     model = Post
     template_name = 'blog/post_delete.html'
     success_url = '/blog/post/list/'
-    
+
