@@ -4,6 +4,10 @@ from .models import Post, Category
 from django.views.generic import ListView, DetailView, FormView, CreateView, UpdateView, DeleteView
 from django.contrib.auth.mixins import LoginRequiredMixin
 from .forms import PostForm
+
+from rest_framework.decorators import api_view
+from rest_framework.response import Response
+
 # Create your views here.
 
 
@@ -72,3 +76,6 @@ class DeletePostView(LoginRequiredMixin,DeleteView):
     template_name = 'blog/post_delete.html'
     success_url = '/blog/post/list/'
 
+@api_view()
+def apiOverview(request):
+    return Response({"name": "ali"})
