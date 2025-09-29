@@ -5,7 +5,13 @@ from ...models import Post
 from django.shortcuts import get_object_or_404
 
 @api_view()
-def apiOverview(request, pk):
-    post = get_object_or_404(Post, id=pk)
+def ApiPostList(request):
+    posts = Post.objects.filter(status=True)
+    serializer = PostSerializer(posts, many=True)
+    return Response(serializer.data)
+
+@api_view()
+def ApiPostDetail(request, pk):
+    post = get_object_or_404(Post, id=pk, status=True)
     serializer = PostSerializer(post)
     return Response(serializer.data)
