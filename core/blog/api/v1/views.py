@@ -3,12 +3,13 @@ from rest_framework.response import Response
 from rest_framework.permissions import IsAuthenticated, IsAuthenticatedOrReadOnly
 from rest_framework.views import APIView
 from rest_framework import mixins
-from rest_framework.generics import GenericAPIView
+from rest_framework.generics import GenericAPIView, ListAPIView, ListCreateAPIView, RetrieveUpdateDestroyAPIView
 from .serializers import PostSerializer
 from ...models import Post
 from django.shortcuts import get_object_or_404
 
 '''
+
 @api_view(['GET', 'POST'])
 @permission_classes([IsAuthenticated])
 def ApiPostList(request):
@@ -22,7 +23,6 @@ def ApiPostList(request):
         serializer.save()
         return Response(serializer.data)
 ''' 
-
 
 """
 ApiPostList APIView
@@ -46,6 +46,8 @@ class ApiPostList (APIView):
 
 """
 
+"""
+ApiPostList using GenericAPIView and mixins
 class ApiPostList (GenericAPIView, mixins.ListModelMixin, mixins.CreateModelMixin):
     ''' API view to handle GET and POST requests for Post list '''
     permission_classes = [IsAuthenticatedOrReadOnly]
@@ -61,6 +63,14 @@ class ApiPostList (GenericAPIView, mixins.ListModelMixin, mixins.CreateModelMixi
         ''' Handle POST request to create a new post '''
         return self.create(request, *args, **kwargs)
 
+"""
+
+
+class ApiPostList(ListAPIView,ListCreateAPIView):
+    ''' API view to handle GET requests for Post list '''
+    permission_classes = [IsAuthenticatedOrReadOnly]
+    serializer_class = PostSerializer
+    queryset = Post.objects.filter(status=True)
 
 
 '''
@@ -85,6 +95,7 @@ def ApiPostDetail(request, pk):
         return Response({"data": "Post deleted successfully"}, status=204)
 '''
 
+"""
 class ApiPostDetail (APIView):
     ''' API view to handle GET, PUT, DELETE requests for a single Post '''
     permission_classes = [IsAuthenticatedOrReadOnly]
@@ -109,3 +120,31 @@ class ApiPostDetail (APIView):
         post = get_object_or_404(Post, id=pk, status=True)
         post.delete()
         return Response({"data": "Post deleted successfully"}, status=204)
+"""
+
+"""
+class ApiPostDetail (GenericAPIView, mixins.RetrieveModelMixin, mixins.UpdateModelMixin, mixins.DestroyModelMixin):
+    ''' API view to handle GET, PUT, DELETE requests for a single Post '''
+    permission_classes = [IsAuthenticatedOrReadOnly]
+    serializer_class = PostSerializer
+    queryset = Post.objects.filter(status=True)
+    
+
+    def get (self, request, *args, **kwargs):
+        ''' Handle GET request to retrieve a specific post '''
+        return self.retrieve(request, *args, **kwargs)
+    
+    def put (self, request, *args, **kwargs):
+        ''' Handle PUT request to update a specific post '''
+        return self.update(request, *args, **kwargs)
+    
+    def delete (self, request, *args, **kwargs):
+        ''' Handle DELETE request to delete a specific post '''
+        return self.destroy(request, *args, **kwargs)
+"""
+
+class ApiPostDetail (RetrieveUpdateDestroyAPIView):
+    ''' API view to handle GET, PUT, DELETE requests for a single Post '''
+    permission_classes = [IsAuthenticatedOrReadOnly]
+    serializer_class = PostSerializer
+    queryset = Post.objects.filter(status=True)
