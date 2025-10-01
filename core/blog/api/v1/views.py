@@ -4,10 +4,10 @@ from rest_framework.permissions import IsAuthenticated, IsAuthenticatedOrReadOnl
 from rest_framework.views import APIView
 from rest_framework import mixins
 from rest_framework.generics import GenericAPIView, ListAPIView, ListCreateAPIView, RetrieveUpdateDestroyAPIView
-from rest_framework.viewsets import ViewSet
+from rest_framework.viewsets import ViewSet , ModelViewSet
 
-from .serializers import PostSerializer
-from ...models import Post
+from .serializers import PostSerializer,PostCreateSerializer
+from ...models import Post , Category
 from django.shortcuts import get_object_or_404
 
 '''
@@ -159,6 +159,7 @@ class ApiPostDetail (RetrieveUpdateDestroyAPIView):
     queryset = Post.objects.filter(status=True)
 """
 
+"""
 class ApiPostViewSet(ViewSet):
     permission_classes = [IsAuthenticatedOrReadOnly]
     serializer_class = PostSerializer
@@ -196,3 +197,14 @@ class ApiPostViewSet(ViewSet):
         post = get_object_or_404(Post, id=pk, status=True)
         post.delete()
         return Response({"data": "Post deleted successfully"}, status=204)
+"""
+
+class ApiPostViewSet(ModelViewSet):
+    permission_classes = [IsAuthenticatedOrReadOnly]
+    serializer_class = PostSerializer
+    queryset = Post.objects.filter(status=True)
+
+class ApiPostCategoryViewSet(ModelViewSet):
+    permission_classes = [IsAuthenticatedOrReadOnly]
+    serializer_class = PostCreateSerializer
+    queryset = Category.objects.all()
