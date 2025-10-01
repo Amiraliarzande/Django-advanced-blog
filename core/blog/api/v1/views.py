@@ -4,6 +4,8 @@ from rest_framework.permissions import IsAuthenticated, IsAuthenticatedOrReadOnl
 from rest_framework.views import APIView
 from rest_framework import mixins
 from rest_framework.generics import GenericAPIView, ListAPIView, ListCreateAPIView, RetrieveUpdateDestroyAPIView
+from rest_framework.viewsets import ViewSet
+
 from .serializers import PostSerializer
 from ...models import Post
 from django.shortcuts import get_object_or_404
@@ -66,11 +68,15 @@ class ApiPostList (GenericAPIView, mixins.ListModelMixin, mixins.CreateModelMixi
 """
 
 
+"""
+ApiPostList using ListAPIView and ListCreateAPIView
+
 class ApiPostList(ListAPIView,ListCreateAPIView):
     ''' API view to handle GET requests for Post list '''
     permission_classes = [IsAuthenticatedOrReadOnly]
     serializer_class = PostSerializer
     queryset = Post.objects.filter(status=True)
+"""
 
 
 '''
@@ -143,8 +149,50 @@ class ApiPostDetail (GenericAPIView, mixins.RetrieveModelMixin, mixins.UpdateMod
         return self.destroy(request, *args, **kwargs)
 """
 
+"""
+ApiPostDetail using RetrieveUpdateDestroyAPIView
+
 class ApiPostDetail (RetrieveUpdateDestroyAPIView):
     ''' API view to handle GET, PUT, DELETE requests for a single Post '''
     permission_classes = [IsAuthenticatedOrReadOnly]
     serializer_class = PostSerializer
     queryset = Post.objects.filter(status=True)
+"""
+
+class ApiPostViewSet(ViewSet):
+    permission_classes = [IsAuthenticatedOrReadOnly]
+    serializer_class = PostSerializer
+    queryset = Post.objects.filter(status=True)
+
+    def list(self, request):
+        ''' Handle GET request to retrieve list of posts '''
+        posts = Post.objects.filter(status=True)
+        serializer = PostSerializer(posts, many=True)
+        return Response(serializer.data)
+
+    def create(self, request):
+        ''' Handle POST request to create a new post '''
+        serializer = PostSerializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+        serializer.save()
+        return Response(serializer.data)
+
+    def retrieve(self, request, pk=None):
+        ''' Handle GET request to retrieve a specific post '''
+        post = get_object_or_404(Post, id=pk, status=True)
+        serializer = self.serializer_class(post)
+        return Response(serializer.data)
+
+    def update(self, request, pk=None):
+        ''' Handle PUT request to update a specific post '''
+        post = get_object_or_404(Post, id=pk, status=True)
+        serializer = self.serializer_class(post, data=request.data)
+        serializer.is_valid(raise_exception=True)
+        serializer.save()
+        return Response(serializer.data)
+
+    def destroy(self, request, pk=None):
+        ''' Handle DELETE request to delete a specific post '''
+        post = get_object_or_404(Post, id=pk, status=True)
+        post.delete()
+        return Response({"data": "Post deleted successfully"}, status=204)
