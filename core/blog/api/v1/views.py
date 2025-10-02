@@ -6,9 +6,11 @@ from rest_framework import mixins
 from rest_framework.generics import GenericAPIView, ListAPIView, ListCreateAPIView, RetrieveUpdateDestroyAPIView
 from rest_framework.viewsets import ViewSet , ModelViewSet
 
+
 from .serializers import PostSerializer,PostCreateSerializer
 from ...models import Post , Category
 from django.shortcuts import get_object_or_404
+from .permission import IsOwnerOrReadOnly
 
 '''
 
@@ -199,7 +201,7 @@ class ApiPostViewSet(ViewSet):
 """
 
 class ApiPostViewSet(ModelViewSet):
-    permission_classes = [IsAuthenticatedOrReadOnly]
+    permission_classes = [IsAuthenticatedOrReadOnly, IsOwnerOrReadOnly]
     serializer_class = PostSerializer
     queryset = Post.objects.filter(status=True)
 
