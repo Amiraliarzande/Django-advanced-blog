@@ -67,7 +67,6 @@ class ApiPostList (GenericAPIView, mixins.ListModelMixin, mixins.CreateModelMixi
 
 """
 
-
 """
 ApiPostList using ListAPIView and ListCreateAPIView
 
