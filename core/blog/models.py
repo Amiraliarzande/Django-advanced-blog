@@ -18,6 +18,9 @@ class Post (models.Model):
     def __str__(self):
         return self.title
     
+    def snippet_api_content(self):
+        return self.content[0:5]
+    
 class Category (models.Model):
 
     name = models.CharField(max_length=100)

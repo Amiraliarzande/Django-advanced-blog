@@ -8,9 +8,11 @@ from ...models import Post, Category
 
 class PostSerializer(serializers.ModelSerializer):
 
+    snippet_content = serializers.CharField(source='snippet_api_content', read_only=True)
+
     class Meta:
         model = Post
-        fields = ['id', 'title', 'author', 'content', 'created_at', 'updated_at', 'status','published_at']
+        fields = ['id', 'title', 'author', 'content','snippet_content','status' ,'created_at', 'updated_at','published_at']
 
 class PostCreateSerializer(serializers.ModelSerializer):
 
