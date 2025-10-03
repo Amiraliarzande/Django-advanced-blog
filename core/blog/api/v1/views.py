@@ -6,6 +6,7 @@ from rest_framework import mixins
 from rest_framework.generics import GenericAPIView, ListAPIView, ListCreateAPIView, RetrieveUpdateDestroyAPIView
 from rest_framework.viewsets import ViewSet , ModelViewSet
 from django_filters.rest_framework import DjangoFilterBackend
+from rest_framework.filters import SearchFilter, OrderingFilter
 
 
 from .serializers import PostSerializer,PostCreateSerializer
@@ -202,13 +203,19 @@ class ApiPostViewSet(ViewSet):
 """
 
 class ApiPostViewSet(ModelViewSet):
+
     permission_classes = [IsAuthenticatedOrReadOnly, IsOwnerOrReadOnly]
     serializer_class = PostSerializer
     queryset = Post.objects.filter(status=True)
-    filter_backends = [DjangoFilterBackend]
+
+    # Filter and search and ordering in the list view
+    filter_backends = [DjangoFilterBackend, SearchFilter, OrderingFilter]
     filterset_fields = ['author', 'category', 'status']
+    search_fields = ['title', 'content']
+    ordering_fields = ['published_at']
 
 class ApiPostCategoryViewSet(ModelViewSet):
+
     permission_classes = [IsAuthenticatedOrReadOnly]
     serializer_class = PostCreateSerializer
     queryset = Category.objects.all()
