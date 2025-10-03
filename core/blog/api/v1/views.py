@@ -13,6 +13,7 @@ from .serializers import PostSerializer,PostCreateSerializer
 from ...models import Post , Category
 from django.shortcuts import get_object_or_404
 from .permission import IsOwnerOrReadOnly
+from .Paginations import CustomPagination
 
 '''
 
@@ -213,6 +214,9 @@ class ApiPostViewSet(ModelViewSet):
     filterset_fields = ['author', 'category', 'status']
     search_fields = ['title', 'content']
     ordering_fields = ['published_at']
+
+    # Add custom pagination
+    pagination_class = CustomPagination
 
 class ApiPostCategoryViewSet(ModelViewSet):
 
