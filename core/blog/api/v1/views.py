@@ -5,6 +5,7 @@ from rest_framework.views import APIView
 from rest_framework import mixins
 from rest_framework.generics import GenericAPIView, ListAPIView, ListCreateAPIView, RetrieveUpdateDestroyAPIView
 from rest_framework.viewsets import ViewSet , ModelViewSet
+from django_filters.rest_framework import DjangoFilterBackend
 
 
 from .serializers import PostSerializer,PostCreateSerializer
@@ -204,6 +205,8 @@ class ApiPostViewSet(ModelViewSet):
     permission_classes = [IsAuthenticatedOrReadOnly, IsOwnerOrReadOnly]
     serializer_class = PostSerializer
     queryset = Post.objects.filter(status=True)
+    filter_backends = [DjangoFilterBackend]
+    filterset_fields = ['author', 'category', 'status']
 
 class ApiPostCategoryViewSet(ModelViewSet):
     permission_classes = [IsAuthenticatedOrReadOnly]
