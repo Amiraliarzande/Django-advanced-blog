@@ -14,6 +14,7 @@ from ...models import Post , Category
 from django.shortcuts import get_object_or_404
 from .permission import IsOwnerOrReadOnly
 from .Paginations import CustomPagination
+from .filters import PostPriceFilter
 
 '''
 
@@ -211,9 +212,11 @@ class ApiPostViewSet(ModelViewSet):
 
     # Filter and search and ordering in the list view
     filter_backends = [DjangoFilterBackend, SearchFilter, OrderingFilter]
-    filterset_fields = ['author', 'category', 'status']
+    filterset_fields = {'author': ['exact', 'in']}
     search_fields = ['title', 'content']
     ordering_fields = ['published_at']
+
+    filterset_class = PostPriceFilter
 
     # Add custom pagination
     pagination_class = CustomPagination
