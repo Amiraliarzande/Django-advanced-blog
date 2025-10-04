@@ -29,12 +29,12 @@ from rest_framework.documentation import include_docs_urls
 
 schema_view = get_schema_view(
    openapi.Info(
-      title="Snippets API",
+      title="BLOG API",
       default_version='v1',
-      description="Test description",
+      description="This is a documentation API for the blog website.",
       terms_of_service="https://www.google.com/policies/terms/",
-      contact=openapi.Contact(email="contact@snippets.local"),
-      license=openapi.License(name="BSD License"),
+      contact=openapi.Contact(email="amiraliarzande8@gmail.com"),
+      license=openapi.License(name="TLS License"),
    ),
    public=True,
    permission_classes=(permissions.AllowAny,),
