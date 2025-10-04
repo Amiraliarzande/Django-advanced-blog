@@ -1,6 +1,12 @@
+# Requirements for the Django project
 Django==4.2
 python-decouple
 Pillow
+
+# For building RESTful APIs
 djangorestframework
 markdown
 django-filter
+
+# For API documentation
+drf-yasg[validation]
