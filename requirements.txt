@@ -8,5 +8,8 @@ djangorestframework
 markdown
 django-filter
 
+coreapi
+
+
 # For API documentation
 drf-yasg[validation]

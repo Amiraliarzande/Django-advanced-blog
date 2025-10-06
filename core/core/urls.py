@@ -45,7 +45,10 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('api-auth/', include('rest_framework.urls')),
     path('blog/', include('blog.urls')),
+    path('accountsApi/', include('accounts.urls')),
+
     path('docs/', include_docs_urls(title='API Documentation')),
+
     path('accounts/', include('django.contrib.auth.urls')),
     path('swagger.<format>/', schema_view.without_ui(cache_timeout=0), name='schema-json'),
     path('swagger/', schema_view.with_ui('swagger', cache_timeout=0), name='schema-swagger-ui'),
