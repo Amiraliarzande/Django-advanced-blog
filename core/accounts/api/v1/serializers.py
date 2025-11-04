@@ -3,7 +3,7 @@ from django.contrib.auth import authenticate
 from django.utils.translation import gettext_lazy as _
 from django.contrib.auth.password_validation import validate_password
 
-from ...models import User  # Assuming User model is imported from appropriate location
+from ...models import User, Profile  # Assuming User model is imported from appropriate location
 from django.core import exceptions
 
 
@@ -86,5 +86,8 @@ class ChangePasswordSerializer(serializers.Serializer):
             raise serializers.ValidationError({"password": e.messages})
 
         return super().validate(attrs)
-
- 
+class ProfileSerializer (serializers.ModelSerializer):
+    email = serializers.CharField(source=("User.email"),read_only=True)
+    class Meta:
+        model = Profile
+        fields = ('id', 'email', 'first_name','last_name','image','desciption')

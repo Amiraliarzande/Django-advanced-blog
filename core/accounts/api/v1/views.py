@@ -4,11 +4,14 @@ from rest_framework import status
 from rest_framework.authtoken.views import ObtainAuthToken
 from rest_framework.authtoken.models import Token
 from rest_framework.response import Response
-from rest_framework.permissions import IsAuthenticated   
-from accounts.models import User
+from rest_framework.permissions import IsAuthenticated 
+
+from django.shortcuts import get_object_or_404
+
+from accounts.models import User, Profile
 
 
-from .serializers import RegistrationSerializer, CustomAuthTokenSerializer, ChangePasswordSerializer
+from .serializers import RegistrationSerializer, CustomAuthTokenSerializer, ChangePasswordSerializer,ProfileSerializer
 
 
 class RegistrationView(generics.GenericAPIView):
@@ -62,3 +65,12 @@ class ChangePassword(generics.GenericAPIView):
             self.object.save()
 
             return Response({"details": "Password updated successfully"})       
+        
+class profileApiView (generics.RetrieveUpdateAPIView):
+    serializer_class = ProfileSerializer
+    queryset = Profile.objects.all()
+
+    def get_object(self):
+        queryset = self.get_queryset()
+        obj = get_object_or_404(queryset , user=self.request.user)
+        return obj
