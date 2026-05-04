@@ -27,4 +27,7 @@ django-redis
 django_celery_beat
 
 # docker compose stage config for gunicorn and nginx 
-gunicorn>=20.0
+gunicorn
+
+
+black
