@@ -1,7 +1,5 @@
-from django.shortcuts import render
 from django.http import HttpResponse
 from .tasks import sendEmail
-from django.core.cache import cache
 from django.views.decorators.cache import cache_page
 import requests
 from django.http import JsonResponse
@@ -28,7 +26,9 @@ def test(request):
                 if "info@saffronhaddad.ir" in text_content
                 else ""
             ),
-            "saved_phone": "09151712200" if "09151712200" in text_content else "",
+            "saved_phone": (
+                "09151712200" if "09151712200" in text_content else ""
+            ),
         }
 
         return JsonResponse(data)

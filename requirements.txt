@@ -31,3 +31,4 @@ gunicorn
 
 # refactoring and tests
 black
+flake8

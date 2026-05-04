@@ -1,28 +1,16 @@
-from rest_framework.decorators import api_view, permission_classes
-from rest_framework.response import Response
-from rest_framework.permissions import IsAuthenticated, IsAuthenticatedOrReadOnly
-from rest_framework.views import APIView
-from rest_framework import mixins
-from rest_framework.generics import (
-    GenericAPIView,
-    ListAPIView,
-    ListCreateAPIView,
-    RetrieveUpdateDestroyAPIView,
+from rest_framework.permissions import (
+    IsAuthenticatedOrReadOnly,
 )
-from rest_framework.viewsets import ViewSet, ModelViewSet
+from rest_framework.viewsets import ModelViewSet
 from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework.filters import SearchFilter, OrderingFilter
-
-
 from .serializers import PostSerializer, PostCreateSerializer
 from ...models import Post, Category
-from django.shortcuts import get_object_or_404
 from .permission import IsOwnerOrReadOnly
 from .Paginations import CustomPagination
 from .filters import PostPriceFilter
 
 """
-
 @api_view(['GET', 'POST'])
 @permission_classes([IsAuthenticated])
 def ApiPostList(request):
@@ -39,7 +27,6 @@ def ApiPostList(request):
 
 """
 ApiPostList APIView
-
 class ApiPostList (APIView):
     ''' API view to handle GET and POST requests for Post list '''
     permission_classes = [IsAuthenticatedOrReadOnly]
@@ -56,7 +43,6 @@ class ApiPostList (APIView):
         serializer.is_valid(raise_exception=True)
         serializer.save()
         return Response(serializer.data)
-
 """
 
 """
@@ -75,7 +61,6 @@ class ApiPostList (GenericAPIView, mixins.ListModelMixin, mixins.CreateModelMixi
     def post (self, request, *args, **kwargs):
         ''' Handle POST request to create a new post '''
         return self.create(request, *args, **kwargs)
-
 """
 
 """
@@ -87,7 +72,6 @@ class ApiPostList(ListAPIView,ListCreateAPIView):
     serializer_class = PostSerializer
     queryset = Post.objects.filter(status=True)
 """
-
 
 """
 @api_view(['GET', 'PUT', 'DELETE'])
@@ -161,7 +145,6 @@ class ApiPostDetail (GenericAPIView, mixins.RetrieveModelMixin, mixins.UpdateMod
 
 """
 ApiPostDetail using RetrieveUpdateDestroyAPIView
-
 class ApiPostDetail (RetrieveUpdateDestroyAPIView):
     ''' API view to handle GET, PUT, DELETE requests for a single Post '''
     permission_classes = [IsAuthenticatedOrReadOnly]
@@ -209,7 +192,6 @@ class ApiPostViewSet(ViewSet):
         return Response({"data": "Post deleted successfully"}, status=204)
 """
 
-
 class ApiPostViewSet(ModelViewSet):
 
     permission_classes = [IsAuthenticatedOrReadOnly, IsOwnerOrReadOnly]
@@ -221,12 +203,8 @@ class ApiPostViewSet(ModelViewSet):
     filterset_fields = {"author": ["exact", "in"]}
     search_fields = ["title", "content"]
     ordering_fields = ["published_at"]
-
     filterset_class = PostPriceFilter
-
-    # Add custom pagination
-    pagination_class = CustomPagination
-
+    pagination_class = CustomPagination # Add custom pagination
 
 class ApiPostCategoryViewSet(ModelViewSet):
 

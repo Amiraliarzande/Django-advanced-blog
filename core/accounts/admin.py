@@ -26,7 +26,14 @@ class CustomUserAdmin(UserAdmin):
         ("Authentication", {"fields": ("email", "password")}),
         (
             "Permissions",
-            {"fields": ("is_superuser", "is_active", "is_staff", "is_verified")},
+            {
+                "fields": (
+                    "is_superuser",
+                    "is_active",
+                    "is_staff",
+                    "is_verified",
+                )
+            },
         ),
         ("Group Permissions", {"fields": ("groups", "user_permissions")}),
         ("Important dates", {"fields": ("last_login",)}),

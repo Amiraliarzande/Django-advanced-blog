@@ -31,7 +31,10 @@ class Migration(migrations.Migration):
                 ),
                 ("first_name", models.CharField(max_length=250)),
                 ("last_name", models.CharField(max_length=250)),
-                ("image", models.ImageField(blank=True, null=True, upload_to="")),
+                (
+                    "image",
+                    models.ImageField(blank=True, null=True, upload_to=""),
+                ),
                 ("desciption", models.TextField(blank=True, null=True)),
                 ("created_at", models.DateTimeField(auto_now_add=True)),
                 ("updated_at", models.DateTimeField(auto_now=True)),
