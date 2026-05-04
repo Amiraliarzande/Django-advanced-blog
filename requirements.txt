@@ -10,6 +10,21 @@ django-filter
 
 coreapi
 
+# jwt 
+djangorestframework-simplejwt
+
 
 # For API documentation
 drf-yasg[validation]
+
+# send email 
+django-mail-templated
+
+# Background Process and cache
+celery
+redis
+django-redis
+django_celery_beat
+
+# docker compose stage config for gunicorn and nginx 
+gunicorn>=20.0

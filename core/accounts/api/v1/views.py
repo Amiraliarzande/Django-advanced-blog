@@ -5,7 +5,7 @@ from rest_framework.authtoken.views import ObtainAuthToken
 from rest_framework.authtoken.models import Token
 from rest_framework.response import Response
 from rest_framework.permissions import IsAuthenticated 
-
+from rest_framework.views import APIView
 from django.shortcuts import get_object_or_404
 
 from accounts.models import User, Profile
@@ -48,8 +48,8 @@ class ChangePassword(generics.GenericAPIView):
     permission_classes = (IsAuthenticated,)
 
     def get_object(self, queryset=None):
-            obj = self.request.user
-            return obj
+        obj = self.request.user
+        return obj
     
     def put(self, request, *args, **kwargs):
         self.object = self.get_object()
@@ -61,10 +61,13 @@ class ChangePassword(generics.GenericAPIView):
 
                 return Response({"old_password": ["Wrong password."]}, status=status.HTTP_400_BAD_REQUEST)
 
-            self.object.set_password(serializer.validated_data.get("new_password1"))
+            self.object.set_password(serializer.validated_data.get("new_password"))
             self.object.save()
 
-            return Response({"details": "Password updated successfully"})       
+            return Response({"details": "Password updated successfully"})  
+        
+        return Response (serializer.errors,status=status.HTTP_400_BAD_REQUEST)
+         
         
 class profileApiView (generics.RetrieveUpdateAPIView):
     serializer_class = ProfileSerializer
@@ -74,3 +77,11 @@ class profileApiView (generics.RetrieveUpdateAPIView):
         queryset = self.get_queryset()
         obj = get_object_or_404(queryset , user=self.request.user)
         return obj
+    
+class LogoutTokenApiView (APIView):
+    serializer_classes = [IsAuthenticated]
+
+    def post(self, request):
+        request.user.auth_token.delete()
+        return Response({"details": "logout successfully"},status=status.HTTP_204_NO_CONTENT)
+    

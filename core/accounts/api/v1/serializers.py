@@ -64,6 +64,8 @@ class CustomAuthTokenSerializer(serializers.Serializer):
             if not user:
                 msg = _('Unable to log in with provided credentials.')
                 raise serializers.ValidationError(msg, code='authorization')
+            if not user.is_verified:
+                raise serializers.ValidationError({"detail":"user is not verified"})
         else:
             msg = _('Must include "username" and "password".')
             raise serializers.ValidationError(msg, code='authorization')
@@ -73,19 +75,22 @@ class CustomAuthTokenSerializer(serializers.Serializer):
 
 class ChangePasswordSerializer(serializers.Serializer):
     old_password = serializers.CharField(required=True)
+    new_password = serializers.CharField(required=True)
     new_password1 = serializers.CharField(required=True)
-    new_password2 = serializers.CharField(required=True)
 
     def validate(self, attrs):
-        if attrs.get('new_password1') != attrs.get('new_password2'):
-            raise serializers.ValidationError({'new_password2': _("The two password fields didn't match.")})
+        new_password = attrs.get('new_password')
+        if new_password != attrs.get('new_password1'):
+            raise serializers.ValidationError({"detail": "Passwords do not match."})
 
         try:
-            validate_password(attrs.get('new_password1'))
-        except exceptions.ValidationError as e:
-            raise serializers.ValidationError({"password": e.messages})
+            validate_password(new_password)
+        except serializers.ValidationError as e:
+
+            raise serializers.ValidationError({"detail": e.messages})
 
         return super().validate(attrs)
+    
 class ProfileSerializer (serializers.ModelSerializer):
     email = serializers.CharField(source=("User.email"),read_only=True)
     class Meta:

@@ -1,0 +1,53 @@
+version: '3.8'
+services:
+  redis:
+    container_name: redis
+    image: docker.arvancloud.ir/redis
+    restart: always
+    ports:
+      - "6379:6379"
+    command: redis-server --save 60 1 --loglevel warning
+
+  worker:
+    container_name: worker
+    build: .
+    command: celery -A core worker --loglevel=info
+    volumes:
+      - ./core:/app
+    depends_on:
+      - redis
+      - backend
+  backend:
+    build: .
+    command: gunicorn core.wsgi --bind 0.0.0.0:8000
+    container_name: backend
+    volumes:
+      - ./core:/app 
+      - static_volume:/app/static
+      - media_volume:/app/media
+    expose:
+      - "8000"
+    environment:
+      - SECRET_KEY=test 
+      - DEBUG=False
+      - ALLOWED_HOSTS=127.0.0.1
+    depends_on:
+      - redis
+
+  nginx:
+    image: docker.arvancloud.ir/nginx
+    container_name: nginx
+    restart: always
+    ports:
+      - "80:80"
+    volumes:
+      - ./default.conf:/etc/nginx/conf.d/default.conf
+      - static_volume:/home/app/static
+      - media_volume:/home/app/media
+    depends_on:
+      - redis
+      - backend
+
+volumes:
+  static_volume:
+  media_volume:    

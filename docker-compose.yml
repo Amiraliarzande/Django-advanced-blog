@@ -1,5 +1,22 @@
 version: '3.8'
 services:
+  redis:
+    container_name: redis
+    image: docker.arvancloud.ir/redis
+    restart: always
+    ports:
+      - "6379:6379"
+    command: redis-server --save 60 1 --loglevel warning
+
+  worker:
+    container_name: worker
+    build: .
+    command: celery -A core worker --loglevel=info
+    volumes:
+      - ./core:/app
+    depends_on:
+      - redis
+      - backend
   backend:
     build: .
     command: python manage.py runserver 0.0.0.0:8000
@@ -12,3 +29,7 @@ services:
       - SECRET_KEY=test 
       - DEBUG=True
       - ALLOWED_HOSTS=127.0.0.1
+    depends_on:
+      - redis
+
+  
