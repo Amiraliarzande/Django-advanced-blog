@@ -3,20 +3,25 @@ from rest_framework.response import Response
 from rest_framework.permissions import IsAuthenticated, IsAuthenticatedOrReadOnly
 from rest_framework.views import APIView
 from rest_framework import mixins
-from rest_framework.generics import GenericAPIView, ListAPIView, ListCreateAPIView, RetrieveUpdateDestroyAPIView
-from rest_framework.viewsets import ViewSet , ModelViewSet
+from rest_framework.generics import (
+    GenericAPIView,
+    ListAPIView,
+    ListCreateAPIView,
+    RetrieveUpdateDestroyAPIView,
+)
+from rest_framework.viewsets import ViewSet, ModelViewSet
 from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework.filters import SearchFilter, OrderingFilter
 
 
-from .serializers import PostSerializer,PostCreateSerializer
-from ...models import Post , Category
+from .serializers import PostSerializer, PostCreateSerializer
+from ...models import Post, Category
 from django.shortcuts import get_object_or_404
 from .permission import IsOwnerOrReadOnly
 from .Paginations import CustomPagination
 from .filters import PostPriceFilter
 
-'''
+"""
 
 @api_view(['GET', 'POST'])
 @permission_classes([IsAuthenticated])
@@ -30,7 +35,7 @@ def ApiPostList(request):
         serializer.is_valid(raise_exception=True)
         serializer.save()
         return Response(serializer.data)
-''' 
+"""
 
 """
 ApiPostList APIView
@@ -84,7 +89,7 @@ class ApiPostList(ListAPIView,ListCreateAPIView):
 """
 
 
-'''
+"""
 @api_view(['GET', 'PUT', 'DELETE'])
 @permission_classes([IsAuthenticatedOrReadOnly])
 def ApiPostDetail(request, pk):
@@ -104,7 +109,7 @@ def ApiPostDetail(request, pk):
     elif request.method == 'DELETE':
         post.delete()
         return Response({"data": "Post deleted successfully"}, status=204)
-'''
+"""
 
 """
 class ApiPostDetail (APIView):
@@ -204,6 +209,7 @@ class ApiPostViewSet(ViewSet):
         return Response({"data": "Post deleted successfully"}, status=204)
 """
 
+
 class ApiPostViewSet(ModelViewSet):
 
     permission_classes = [IsAuthenticatedOrReadOnly, IsOwnerOrReadOnly]
@@ -212,14 +218,15 @@ class ApiPostViewSet(ModelViewSet):
 
     # Filter and search and ordering in the list view
     filter_backends = [DjangoFilterBackend, SearchFilter, OrderingFilter]
-    filterset_fields = {'author': ['exact', 'in']}
-    search_fields = ['title', 'content']
-    ordering_fields = ['published_at']
+    filterset_fields = {"author": ["exact", "in"]}
+    search_fields = ["title", "content"]
+    ordering_fields = ["published_at"]
 
     filterset_class = PostPriceFilter
 
     # Add custom pagination
     pagination_class = CustomPagination
+
 
 class ApiPostCategoryViewSet(ModelViewSet):
 

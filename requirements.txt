@@ -29,5 +29,5 @@ django_celery_beat
 # docker compose stage config for gunicorn and nginx 
 gunicorn
 
-
+# refactoring and tests
 black

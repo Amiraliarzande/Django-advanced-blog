@@ -3,24 +3,26 @@ from django.contrib.auth import authenticate
 from django.utils.translation import gettext_lazy as _
 from django.contrib.auth.password_validation import validate_password
 
-from ...models import User, Profile  # Assuming User model is imported from appropriate location
+from ...models import (
+    User,
+    Profile,
+)  # Assuming User model is imported from appropriate location
 from django.core import exceptions
-
-
 
 
 class RegistrationSerializer(serializers.ModelSerializer):
     password1 = serializers.CharField(write_only=True)
+
     class Meta:
         model = User
-        fields = ('email', 'password', 'password1')
+        fields = ("email", "password", "password1")
 
     def validate(self, attrs):
-        email = attrs.get('email')
-        password = attrs.get('password')
-        if password != attrs.get('password1'):
+        email = attrs.get("email")
+        password = attrs.get("password")
+        if password != attrs.get("password1"):
             raise serializers.ValidationError({"detail": "Passwords do not match."})
-        
+
         try:
             validate_password(password)
 
@@ -29,49 +31,49 @@ class RegistrationSerializer(serializers.ModelSerializer):
             raise serializers.ValidationError({"detail": e.messages})
 
         return super().validate(attrs)
-    
+
     def create(self, validated_data):
-        validated_data.pop('password1')
+        validated_data.pop("password1")
         user = User.objects.create_user(**validated_data)
         return user
-    
+
+
 class CustomAuthTokenSerializer(serializers.Serializer):
     """
     Serializer for the authentication endpoint.
     """
-    email = serializers.CharField(
-        label=_("Email"),
-        write_only=True
-    )
+
+    email = serializers.CharField(label=_("Email"), write_only=True)
     password = serializers.CharField(
         label=_("Password"),
-        style={'input_type': 'password'},
+        style={"input_type": "password"},
         trim_whitespace=False,
-        write_only=True
+        write_only=True,
     )
 
     def validate(self, attrs):
-        username = attrs.get('email')
-        password = attrs.get('password')
+        username = attrs.get("email")
+        password = attrs.get("password")
 
         if username and password:
-            
+
             user = authenticate(
-                request=self.context.get('request'),
+                request=self.context.get("request"),
                 username=username,
-                password=password
+                password=password,
             )
             if not user:
-                msg = _('Unable to log in with provided credentials.')
-                raise serializers.ValidationError(msg, code='authorization')
+                msg = _("Unable to log in with provided credentials.")
+                raise serializers.ValidationError(msg, code="authorization")
             if not user.is_verified:
-                raise serializers.ValidationError({"detail":"user is not verified"})
+                raise serializers.ValidationError({"detail": "user is not verified"})
         else:
             msg = _('Must include "username" and "password".')
-            raise serializers.ValidationError(msg, code='authorization')
+            raise serializers.ValidationError(msg, code="authorization")
 
-        attrs['user'] = user
-        return attrs    
+        attrs["user"] = user
+        return attrs
+
 
 class ChangePasswordSerializer(serializers.Serializer):
     old_password = serializers.CharField(required=True)
@@ -79,8 +81,8 @@ class ChangePasswordSerializer(serializers.Serializer):
     new_password1 = serializers.CharField(required=True)
 
     def validate(self, attrs):
-        new_password = attrs.get('new_password')
-        if new_password != attrs.get('new_password1'):
+        new_password = attrs.get("new_password")
+        if new_password != attrs.get("new_password1"):
             raise serializers.ValidationError({"detail": "Passwords do not match."})
 
         try:
@@ -90,9 +92,11 @@ class ChangePasswordSerializer(serializers.Serializer):
             raise serializers.ValidationError({"detail": e.messages})
 
         return super().validate(attrs)
-    
-class ProfileSerializer (serializers.ModelSerializer):
-    email = serializers.CharField(source=("User.email"),read_only=True)
+
+
+class ProfileSerializer(serializers.ModelSerializer):
+    email = serializers.CharField(source=("User.email"), read_only=True)
+
     class Meta:
         model = Profile
-        fields = ('id', 'email', 'first_name','last_name','image','desciption')
+        fields = ("id", "email", "first_name", "last_name", "image", "desciption")
