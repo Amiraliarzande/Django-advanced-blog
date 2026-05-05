@@ -30,14 +30,13 @@ class cbv(TemplateView):
 
 
 # Post List View
-class postListView(LoginRequiredMixin, ListView):
+class postListView(ListView):
 
     model = Post
     template_name = "post_list.html"
     context_object_name = "articles"
     paginate_by = 2
     ordering = ["-created_at"]
-
 
 # Post Detail View
 class postDetailView(LoginRequiredMixin, DetailView):
