@@ -38,6 +38,7 @@ class postListView(ListView):
     paginate_by = 2
     ordering = ["-created_at"]
 
+
 # Post Detail View
 class postDetailView(LoginRequiredMixin, DetailView):
 
@@ -46,7 +47,7 @@ class postDetailView(LoginRequiredMixin, DetailView):
 
 
 """
-# Add Post View 
+# Add Post View
 class addPostView(FormView):
     template_name = 'blog/contact.html'
     form_class = PostForm

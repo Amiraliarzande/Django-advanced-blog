@@ -26,9 +26,7 @@ def test(request):
                 if "info@saffronhaddad.ir" in text_content
                 else ""
             ),
-            "saved_phone": (
-                "09151712200" if "09151712200" in text_content else ""
-            ),
+            "saved_phone": ("09151712200" if "09151712200" in text_content else ""),
         }
 
         return JsonResponse(data)

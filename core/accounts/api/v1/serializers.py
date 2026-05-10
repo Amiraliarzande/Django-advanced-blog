@@ -17,12 +17,9 @@ class RegistrationSerializer(serializers.ModelSerializer):
         fields = ("email", "password", "password1")
 
     def validate(self, attrs):
-        email = attrs.get("email")
         password = attrs.get("password")
         if password != attrs.get("password1"):
-            raise serializers.ValidationError(
-                {"detail": "Passwords do not match."}
-            )
+            raise serializers.ValidationError({"detail": "Passwords do not match."})
 
         try:
             validate_password(password)
@@ -67,9 +64,7 @@ class CustomAuthTokenSerializer(serializers.Serializer):
                 msg = _("Unable to log in with provided credentials.")
                 raise serializers.ValidationError(msg, code="authorization")
             if not user.is_verified:
-                raise serializers.ValidationError(
-                    {"detail": "user is not verified"}
-                )
+                raise serializers.ValidationError({"detail": "user is not verified"})
         else:
             msg = _('Must include "username" and "password".')
             raise serializers.ValidationError(msg, code="authorization")
@@ -86,9 +81,7 @@ class ChangePasswordSerializer(serializers.Serializer):
     def validate(self, attrs):
         new_password = attrs.get("new_password")
         if new_password != attrs.get("new_password1"):
-            raise serializers.ValidationError(
-                {"detail": "Passwords do not match."}
-            )
+            raise serializers.ValidationError({"detail": "Passwords do not match."})
 
         try:
             validate_password(new_password)

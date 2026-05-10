@@ -13,12 +13,8 @@ urlpatterns = [
         jwt_views.TokenRefreshView.as_view(),
         name="jwt_refresh",
     ),
-    path(
-        "jwt/verify/", jwt_views.TokenVerifyView.as_view(), name="jwt_verify"
-    ),
-    path(
-        "registration/", views.RegistrationView.as_view(), name="registration"
-    ),
+    path("jwt/verify/", jwt_views.TokenVerifyView.as_view(), name="jwt_verify"),
+    path("registration/", views.RegistrationView.as_view(), name="registration"),
     path("login/", views.CustomAuthToken.as_view(), name="login"),
     path("logout/", views.LogoutTokenApiView.as_view(), name="logout"),
     path(

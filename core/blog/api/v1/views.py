@@ -24,7 +24,6 @@ def ApiPostList(request):
         serializer.save()
         return Response(serializer.data)
 """
-
 """
 ApiPostList APIView
 class ApiPostList (APIView):
@@ -36,7 +35,7 @@ class ApiPostList (APIView):
         posts = Post.objects.filter(status=True)
         serializer = PostSerializer(posts, many=True)
         return Response(serializer.data)
-    
+
     def post (self, request):
         ''' Handle POST request to create a new post '''
         serializer = PostSerializer(data=request.data)
@@ -44,7 +43,6 @@ class ApiPostList (APIView):
         serializer.save()
         return Response(serializer.data)
 """
-
 """
 ApiPostList using GenericAPIView and mixins
 class ApiPostList (GenericAPIView, mixins.ListModelMixin, mixins.CreateModelMixin):
@@ -62,7 +60,6 @@ class ApiPostList (GenericAPIView, mixins.ListModelMixin, mixins.CreateModelMixi
         ''' Handle POST request to create a new post '''
         return self.create(request, *args, **kwargs)
 """
-
 """
 ApiPostList using ListAPIView and ListCreateAPIView
 
@@ -72,7 +69,6 @@ class ApiPostList(ListAPIView,ListCreateAPIView):
     serializer_class = PostSerializer
     queryset = Post.objects.filter(status=True)
 """
-
 """
 @api_view(['GET', 'PUT', 'DELETE'])
 @permission_classes([IsAuthenticatedOrReadOnly])
@@ -83,7 +79,6 @@ def ApiPostDetail(request, pk):
     if request.method == 'GET':
         serializer = PostSerializer(post)
         return Response(serializer.data)
-    
     elif request.method == 'PUT':
         serializer = PostSerializer(post, data=request.data)
         serializer.is_valid(raise_exception=True)
@@ -94,7 +89,6 @@ def ApiPostDetail(request, pk):
         post.delete()
         return Response({"data": "Post deleted successfully"}, status=204)
 """
-
 """
 class ApiPostDetail (APIView):
     ''' API view to handle GET, PUT, DELETE requests for a single Post '''
@@ -106,7 +100,6 @@ class ApiPostDetail (APIView):
         post = get_object_or_404(Post, id=pk, status=True)
         serializer = self.serializer_class(post)
         return Response(serializer.data)
-    
     def put (self, request, pk):
         ''' Handle PUT request to update a specific post '''
         post = get_object_or_404(Post, id=pk, status=True)
@@ -114,35 +107,28 @@ class ApiPostDetail (APIView):
         serializer.is_valid(raise_exception=True)
         serializer.save()
         return Response(serializer.data)
-    
     def delete (self, request, pk):
         ''' Handle DELETE request to delete a specific post '''
         post = get_object_or_404(Post, id=pk, status=True)
         post.delete()
         return Response({"data": "Post deleted successfully"}, status=204)
 """
-
 """
 class ApiPostDetail (GenericAPIView, mixins.RetrieveModelMixin, mixins.UpdateModelMixin, mixins.DestroyModelMixin):
     ''' API view to handle GET, PUT, DELETE requests for a single Post '''
     permission_classes = [IsAuthenticatedOrReadOnly]
     serializer_class = PostSerializer
     queryset = Post.objects.filter(status=True)
-    
-
     def get (self, request, *args, **kwargs):
         ''' Handle GET request to retrieve a specific post '''
         return self.retrieve(request, *args, **kwargs)
-    
     def put (self, request, *args, **kwargs):
         ''' Handle PUT request to update a specific post '''
         return self.update(request, *args, **kwargs)
-    
     def delete (self, request, *args, **kwargs):
         ''' Handle DELETE request to delete a specific post '''
         return self.destroy(request, *args, **kwargs)
 """
-
 """
 ApiPostDetail using RetrieveUpdateDestroyAPIView
 class ApiPostDetail (RetrieveUpdateDestroyAPIView):
@@ -151,32 +137,27 @@ class ApiPostDetail (RetrieveUpdateDestroyAPIView):
     serializer_class = PostSerializer
     queryset = Post.objects.filter(status=True)
 """
-
 """
 class ApiPostViewSet(ViewSet):
     permission_classes = [IsAuthenticatedOrReadOnly]
     serializer_class = PostSerializer
     queryset = Post.objects.filter(status=True)
-
     def list(self, request):
         ''' Handle GET request to retrieve list of posts '''
         posts = Post.objects.filter(status=True)
         serializer = PostSerializer(posts, many=True)
         return Response(serializer.data)
-
     def create(self, request):
         ''' Handle POST request to create a new post '''
         serializer = PostSerializer(data=request.data)
         serializer.is_valid(raise_exception=True)
         serializer.save()
         return Response(serializer.data)
-
     def retrieve(self, request, pk=None):
         ''' Handle GET request to retrieve a specific post '''
         post = get_object_or_404(Post, id=pk, status=True)
         serializer = self.serializer_class(post)
         return Response(serializer.data)
-
     def update(self, request, pk=None):
         ''' Handle PUT request to update a specific post '''
         post = get_object_or_404(Post, id=pk, status=True)
@@ -184,13 +165,13 @@ class ApiPostViewSet(ViewSet):
         serializer.is_valid(raise_exception=True)
         serializer.save()
         return Response(serializer.data)
-
     def destroy(self, request, pk=None):
         ''' Handle DELETE request to delete a specific post '''
         post = get_object_or_404(Post, id=pk, status=True)
         post.delete()
         return Response({"data": "Post deleted successfully"}, status=204)
 """
+
 
 class ApiPostViewSet(ModelViewSet):
 
@@ -204,7 +185,8 @@ class ApiPostViewSet(ModelViewSet):
     search_fields = ["title", "content"]
     ordering_fields = ["published_at"]
     filterset_class = PostPriceFilter
-    pagination_class = CustomPagination # Add custom pagination
+    pagination_class = CustomPagination  # Add custom pagination
+
 
 class ApiPostCategoryViewSet(ModelViewSet):
 
