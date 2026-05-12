@@ -1,4 +1,4 @@
-FROM docker.arvancloud.ir/python:3.10
+FROM docker.ir/python:3.10
 
 ENV PYTHONDONTWRITEBYTECODE=1
 ENV PYTHONUNBUFFERED=1
