@@ -13,6 +13,6 @@ jobs:
     steps:
     - uses: actions/checkout@v4
     - name: Setup Docker Compose
-      run: docker compose up -d --build
+      run: docker compose -f docker-compose-stage.yml up -d --build
     - name: Run Test
       run: docker compose exec -T backend sh -c "flake8 && pytest ."
