@@ -2,21 +2,17 @@ version: '3.8'
 services:
   redis:
     container_name: redis
-    image: redis
+    image: docker.arvancloud.ir/redis
     restart: always
     ports:
       - "6379:6379"
     command: redis-server --save 60 1 --loglevel warning
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 5s
+      timeout: 3s
+      retries: 5
 
-  worker:
-    container_name: worker
-    build: .
-    command: celery -A core worker --loglevel=info
-    volumes:
-      - ./core:/app
-    depends_on:
-      - redis
-      - backend
   backend:
     build: .
     command: gunicorn core.wsgi --bind 0.0.0.0:8000
@@ -32,10 +28,29 @@ services:
       - DEBUG=True
       - ALLOWED_HOSTS=127.0.0.1
     depends_on:
-      - redis
+      redis:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD", "python", "-c", "import urllib.request; urllib.request.urlopen('http://localhost:8000/health/')"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 15s
+
+  worker:
+    container_name: worker
+    build: .
+    command: celery -A core worker --loglevel=info
+    volumes:
+      - ./core:/app
+    depends_on:
+      redis:
+        condition: service_healthy
+      backend:
+        condition: service_healthy
 
   nginx:
-    image: nginx
+    image: docker.arvancloud.ir/nginx
     container_name: nginx
     restart: always
     ports:
@@ -45,9 +60,9 @@ services:
       - static_volume:/home/app/static
       - media_volume:/home/app/media
     depends_on:
-      - redis
-      - backend
+      backend:
+        condition: service_healthy
 
 volumes:
   static_volume:
-  media_volume:    
+  media_volume:
