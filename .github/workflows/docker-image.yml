@@ -11,6 +11,10 @@ jobs:
     - name: Setup Docker Compose
       run: docker compose -f docker-compose-stage.yml up -d --build
 
+    - name: Show logs on failure
+      if: always()
+      run: docker compose -f docker-compose-stage.yml logs backend
+
     - name: Wait for backend to be healthy
       run: |
         timeout 120 bash -c '
