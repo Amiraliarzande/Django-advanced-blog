@@ -23,10 +23,8 @@ services:
       - media_volume:/app/media
     expose:
       - "8000"
-    environment:
-      - SECRET_KEY=test 
-      - DEBUG=True
-      - ALLOWED_HOSTS=127.0.0.1
+    env_file:
+      - ./envs/.env.stage
     depends_on:
       redis:
         condition: service_healthy
