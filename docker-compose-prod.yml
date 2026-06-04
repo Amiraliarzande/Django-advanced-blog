@@ -2,7 +2,7 @@ version: '3.8'
 services:
   redis:
     container_name: redis
-    image: docker.arvancloud.ir/redis
+    image: docker.abrha.net/redis
     restart: always
     ports:
       - "6379:6379"
@@ -48,7 +48,7 @@ services:
         condition: service_healthy
 
   nginx:
-    image: docker.arvancloud.ir/nginx
+    image: docker.abrha.net/nginx
     container_name: nginx
     restart: always
     ports:
