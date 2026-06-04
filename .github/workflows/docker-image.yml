@@ -32,7 +32,7 @@ jobs:
     needs: build
     steps:
     - name: Deploy to VPS
-      uses: appleboy/ssh-action@v1.0.3
+      uses: action/checkout@v3
       with:
         host: ${{ secrets.HOST }}
         username: ${{ secrets.USERNAME }}
