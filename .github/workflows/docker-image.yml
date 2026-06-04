@@ -26,3 +26,20 @@ jobs:
 
     - name: Run Test
       run: docker compose -f docker-compose-stage.yml exec -T backend sh -c "flake8 && pytest ."
+
+  deploy:
+    runs-on: ubuntu-latest
+    needs: build
+    steps:
+    - name: Deploy to VPS
+      uses: appleboy/ssh-action@v1.0.3
+      with:
+        host: ${{ secrets.HOST }}
+        username: ${{ secrets.USERNAME }}
+        password: ${{ secrets.PASSWORD }}
+        port: ${{ secrets.PORT }}
+        script: |
+          cd ${{ secrets.PROJECT_PATH }}
+          docker compose -f docker-compose-prod.yml stop
+          git pull
+          docker compose -f docker-compose-prod.yml restart
